@@ -1,0 +1,33 @@
+version: "3.8"
+
+name: cattomato-k6
+
+services:
+  influxdb:
+    image: influxdb:1.8
+    container_name: cattomato-k6-influxdb
+    restart: unless-stopped
+    ports:
+      - "${INFLUXDB_PORT:-8086}:8086"
+    environment:
+      INFLUXDB_DB: ${INFLUXDB_DB:-k6}
+      INFLUXDB_HTTP_AUTH_ENABLED: "false"
+    env_file:
+      - .env.k6
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
+  k6:
+    image: grafana/k6:latest
+    container_name: cattomato-k6-runner
+    volumes:
+      - ./scripts:/scripts
+    env_file:
+      - .env.k6
+    depends_on:
+      - influxdb
+    profiles:
+      - run
+
+volumes:
+  influxdb_data:

@@ -1,0 +1,6 @@
+{
+  "name": "cattomato_k6",
+  "version": "1.0.0",
+  "description": "k6 load testing for Spring Boot backend",
+  "private": true
+}
